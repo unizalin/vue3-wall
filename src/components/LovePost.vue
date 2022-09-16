@@ -12,9 +12,9 @@
     <div v-else v-for="(likePost, index) in likePosts" :key="index">
       <div class="love-post" style="margin-top: 16px">
         <div class="avatar">
-          <img class="avatar__img" :src="likePost.userPhoto"/>
+          <img class="avatar__img" :src="likePost.user.photo"/>
           <div style="margin-left: 16px;">
-            <router-link :to="`/personal/${likePost.userId}`" class="link">{{ likePost.userName }}</router-link>
+            <router-link :to="`/personal/${likePost.user._id}`" class="link">{{ likePost.user.name }}</router-link>
             <p class="avatar__text">發文時間：{{ timeToLocalTime(likePost.createAt) }}</p>
           </div>
         </div>
@@ -26,7 +26,7 @@
             </button>
           </li>
           <li class="look">
-            <button class="love-post__btn" @click="gotoPersonalPage(likePost.userId, likePost.postId)">
+            <button class="love-post__btn" @click="gotoPersonalPage(likePost.user._id,likePost.id)">
               <i class="material-icons-outlined love-post__btn__icon">arrow_circle_right</i>
               <p class="love-post__btn__text fw-bold">查看</p>
             </button>
@@ -37,39 +37,33 @@
   </div>
 </template>
 <script>
-import { defineComponent, reactive } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { timeToLocalTime, timeDiffNowTime } from '@/utils/time'
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'LovePost',
   props: {
-    // likePosts: {
-    //   trpe: Array,
-    //   default: () => []
-    // }
+    likePosts: {
+      trpe: Array,
+      default: () => []
+    }
   },
-  setup () {
-    const likePosts = reactive([
-      {
-        userName: '希琳',
-        userPhoto: 'https://memeprod.sgp1.digitaloceanspaces.com/user-wtf/1652373309671.jpg',
-        userId: '9123',
-        postId: '123',
-        createAt: '2022-05-10T17:22:10.221Z'
-      },
-      {
-        userName: '希琳',
-        userPhoto: 'https://memeprod.sgp1.digitaloceanspaces.com/user-wtf/1652373309671.jpg',
-        userId: '65423',
-        postId: '456',
-        createAt: '2022-05-10T17:22:10.221Z'
-      }
-    ])
-
+  setup (props) {
+    const likePosts = computed(()=> props.likePosts)
+    const router = useRouter()
+    const gotoPersonalPage = (userId,postId) =>{
+      console.log(userId,postId)
+      router.push({
+        path: `/personal/${userId}`,
+        query: { postId }
+      });
+    }
     return {
       likePosts,
       timeToLocalTime,
-      timeDiffNowTime
+      timeDiffNowTime,
+      gotoPersonalPage
     }
   }
 })

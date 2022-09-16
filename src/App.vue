@@ -1,20 +1,47 @@
 <template>
-  <!-- <div id="nav">
-    <Header/>
-  </div> -->
-  <!-- <div class="main container"> -->
-    <router-view/>
-    <!-- <Sidebar /> -->
-  <!-- </div> -->
+  <router-view v-if="isRouterAlive" />
 </template>
 <script>
-// import Header from '@/layout/components/Header.vue'
-// import Sidebar from '@/layout/components/Sidebar.vue'
-export default ({
+import { defineComponent, ref, nextTick, provide, onBeforeMount } from 'vue';
+import { useRouter, onBeforeRouteUpdate } from 'vue-router';
+import { useStore } from 'vuex';
+export default defineComponent({
   name: 'App',
-  components: {
-    // Header,
-    // Sidebar
+  setup(){
+    const router = useRouter();
+    const store = useStore(); 
+    onBeforeMount(() => {
+        if(!store.getters['user/isLogin']){
+          router.push({ path: '/login' });
+        }
+    })
+
+    onBeforeRouteUpdate(async(to, from) => {
+      if(!store.getters['user/isLogin']){
+          router.push({ path: '/login' });
+        }
+    });
+    // 局部组件刷新
+    const isRouterAlive = ref(true);
+    const reload = () => {
+      isRouterAlive.value = false;
+      nextTick(() => {
+        isRouterAlive.value = true;
+      });
+    };
+    provide('reload', reload);
+  
+    // onBeforeMonut(() => {
+    //   console.log('sss')
+    //   // const isLogin = await store.getters['user/isLogin'];
+    //   // if(isLogin){
+    //   //   router.push({ path: '/login' });
+    //   // }
+    // });
+
+    return {
+      isRouterAlive,
+    };
   }
 })
 </script>

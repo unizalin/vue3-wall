@@ -3,12 +3,12 @@
     <div class="block-title">
       追蹤名單
     </div>
-    <!-- <Concerned :followers="followers" /> -->
-    <Concerned/>
+    <Concerned :followers="storeFollowing" />
   </div>
 </template>
 <script>
-import { defineComponent } from 'vue'
+import { computed, defineComponent, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import Concerned from '@/components/Concerned'
 
 export default defineComponent({
@@ -17,6 +17,15 @@ export default defineComponent({
     Concerned
   },
   setup () {
+    const store = useStore()
+    const storeFollowing = computed( () => store.getters['user/followingList'])
+    onMounted(async() => {
+      store.dispatch('user/getFollowing')
+    })
+    return {
+      store,
+      storeFollowing
+    }
   }
 })
 </script>

@@ -12,21 +12,42 @@
           </div>
           <div class="login-input">
             <p>
-              <input type="text" class="nickname" placeholder="暱稱">
-              <!-- <span v-show="!isVerifiedNickname" class="nickname-msg">暱稱至少 2 個字元以上</span> -->
+              <input type="text" class="nickname" placeholder="暱稱" v-model="registerForm.name">
+              <span v-show="!isVerifiedNickname" class="nickname-msg">暱稱至少 2 個字元以上</span>
             </p>
             <p>
-              <input type="email" class="email" placeholder="Email">
-              <!-- <span v-show="!isVerifiedEmail" class="email-msg">Email 格式錯誤</span> -->
-              <!-- <span v-show="isEmailRegistered" class="email-msg">帳號已被註冊，請替換新的 Email！</span> -->
+              <input type="email" class="email" placeholder="Email" v-model="registerForm.email" >
+              <span v-show="!isVerifiedEmail" class="email-msg">Email 格式錯誤</span>
+              <span v-show="isEmailRegistered" class="email-msg">帳號已被註冊，請替換新的 Email！</span>
             </p>
             <p>
-              <input type="password" class="password" placeholder="Password">
-              <!-- <span v-show="!isVerifiedPassword" class="password-msg">密碼需至少 8 碼以上，並英文、數字混合</span> -->
+              <input type="password" class="password" placeholder="Password" v-model="registerForm.password">
+              <span v-show="!isVerifiedPassword" class="password-msg">密碼需至少 8 碼以上，並英文、數字混合</span>
+            </p>
+            <p>
+              <input type="password" class="confirmPassword" placeholder="Confirm Password" v-model="registerForm.confirmPassword">
+              <span v-show="!isVerifiedConfirmPassword" class="password-msg">確認密碼跟密碼不一致</span>
             </p>
           </div>
+          <div class="user-info">
+            <p class="user-info__label">性別</p>
+            <div class="form-radio" style="margin-top: 8px;">
+              <label class="radio">
+                <input type="radio" name="gender" class="radio__input"  value="male"   v-model="registerForm.sex" checked>
+                <i class="material-icons un-checked radio__input-icon">radio_button_unchecked</i>
+                <i class="material-icons checked radio__input-icon">radio_button_checked</i>
+                <p class="radio__input-text">男性</p>
+              </label>
+              <label class="radio" style="margin-left: 32px;">
+                <input type="radio" name="gender"  value="female" class="radio__input"  v-model="registerForm.sex">
+                <i class="material-icons un-checked radio__input-icon">radio_button_unchecked</i>
+                <i class="material-icons checked radio__input-icon">radio_button_checked</i>
+                <p class="radio__input-text">女性</p>
+              </label>
+            </div>
+          </div>
           <div class="btn-block">
-            <!-- <button type="button" class="btn-signup" @click="register">註冊</button> -->
+            <button type="button" class="btn-signup" @click="register">註冊</button>
             <router-link to="/login" class="btn-login">登入</router-link>
           </div>
         </div>
@@ -36,32 +57,37 @@
 </template>
 <script>
 import { defineComponent, ref, reactive } from 'vue'
-// import { useRouter } from 'vue-router'
-// import { useStore } from 'vuex'
-import { nicknameRule, emailRule, passwordRule } from '@/utils/validation'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { nicknameRule, emailRule, passwordRule, confirmPasswordRule } from '@/utils/validation'
 
 export default defineComponent({
   name: 'PublishPost',
   components: {},
   setup () {
-    // const router = useRouter()
-    // const store = useStore()
+    const router = useRouter()
+    const store = useStore()
     const isVerifiedNickname = ref(true)
     const isVerifiedEmail = ref(true)
     const isVerifiedPassword = ref(true)
+    const isVerifiedConfirmPassword =ref(true)
     const isEmailRegistered = ref(false)
+
     // const accountStatus = computed(() => {
     //   return store.getters['user/accountStatus']
     // });
 
     const registerForm = reactive({
-      nickname: '',
+      name: '',
       email: '',
-      password: ''
+      password: '',
+      confirmPassword: '',
+      sex: 'male',
+      photo: 'https://i.imgur.com/tpNL3KK.png'
     })
 
     const register = async () => {
-      !registerForm.nickname || !nicknameRule(registerForm.nickname)
+      !registerForm.name || !nicknameRule(registerForm.name)
         ? (isVerifiedNickname.value = false)
         : (isVerifiedNickname.value = true)
 
@@ -73,26 +99,27 @@ export default defineComponent({
         ? (isVerifiedPassword.value = false)
         : (isVerifiedPassword.value = true)
 
-      // if (isVerifiedNickname.value && isVerifiedEmail.value && isVerifiedPassword.value) {
-      //   router.push({ path: '/login' });
-      // }
+      registerForm.confirmPassword.length>0 && confirmPasswordRule(registerForm.password,registerForm.confirmPassword)? (isVerifiedConfirmPassword.value = true)
+        : (isVerifiedConfirmPassword.value = false)
 
-      // await store.dispatch('user/register', { ...registerForm })
+      if(isVerifiedNickname.value && isVerifiedEmail.value && isVerifiedPassword.value && isVerifiedConfirmPassword.value){
+        const resData =await store.dispatch('user/register', { ...registerForm })
+        console.log(resData)
+        if(resData.status == 'false'){
+          alert('信箱已註冊，請更換')
+          isEmailRegistered.value= true
+          return 
+        }
+        router.push({ path: '/login' });
+      }
     }
-
-    // watch(status.value, (newStatus) => {
-    //   if (newStatus.status === 'success') {
-    //     router.push({ path: '/login' })
-    //     store.dispatch('user/setDefaultResponse')
-    //   }
-    // })
-
     return {
       registerForm,
       isVerifiedNickname,
       isVerifiedEmail,
       isEmailRegistered,
       isVerifiedPassword,
+      isVerifiedConfirmPassword,
       register
     }
   }
@@ -212,5 +239,9 @@ export default defineComponent({
   display: block;
   font: 14px 'Noto Sans TC';
   color: #f57375;
+}
+
+.form-radio{
+  justify-content: space-around;
 }
 </style>

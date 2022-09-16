@@ -19,22 +19,41 @@
 </template>
 <script>
 import { computed, defineComponent, ref } from 'vue'
+import { useStore } from 'vuex';
+import { passwordRule } from '@/utils/validation';
+
 export default defineComponent({
   name: 'ResetPassword',
   components: {},
   setup () {
+    const store = useStore();
+
     const password = ref('')
     const confirmPassword = ref('')
     const checkPassWordSame = computed(() => {
       if (password.value === confirmPassword.value) {
-        return true
+        return passwordRule(password.value);
       }
       return false
     })
+    const updatePassWord = async () =>{
+      if (!checkPassWordSame) {
+        alert('密碼需至少 8 碼以上，並英文、數字混合');
+      }
+      const res =await store.dispatch('user/updatePassword',{
+        password: password.value,
+        confirmPassword: confirmPassword.value,
+      })
+      if(res.status==='success'){
+        alert('成功修改個人資料');
+        await store.dispatch('user/getUserProfile');
+      }
+    }
     return {
       password,
       confirmPassword,
-      checkPassWordSame
+      checkPassWordSame,
+      updatePassWord
     }
   }
 

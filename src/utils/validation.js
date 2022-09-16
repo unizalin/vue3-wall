@@ -25,6 +25,11 @@ export const passwordRule = (password) => {
   return /^((?=\S*?[A-Za-z])(?=\S*?[0-9]).{7,})\S$/.test(password)
 }
 
+export const confirmPasswordRule = (password,confirmPassword) => {
+  console.log(password==confirmPassword)
+  return password == confirmPassword
+}
+
 /** 圖片格式驗證
  * @desc 密碼驗證
  * @param { filename } string - image test

@@ -14,14 +14,14 @@
         <div class="avatar">
           <img
             class="avatar__img"
-            :src="follower.userPhoto"
+            :src="follower.user.photo"
           />
           <div style="margin-left: 16px;">
             <router-link
-              :to="`/personal/${follower.userId}`"
+              :to="`/personal/${follower.user._id}`"
               class="link"
-            >{{ follower.userName }}</router-link>
-            <p class="avatar__text">您已追蹤 {{ timeDiffNowTime(follower.createAt) }} 天！</p>
+            >{{ follower.user.name }}</router-link>
+            <p class="avatar__text">您已追蹤 {{ timeDiffNowTime(follower.createdAt) }} 天！</p>
           </div>
         </div>
         <div class="concerned__text">追蹤時間：{{ timeToLocalTime(follower.createAt) }}</div>
@@ -30,25 +30,21 @@
   </div>
 </template>
 <script>
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { timeToLocalTime, timeDiffNowTime } from '@/utils/time'
 
 export default defineComponent({
-  setup () {
-    const followers = reactive([
-      {
-        userName: '希琳',
-        userPhoto: 'https://memeprod.sgp1.digitaloceanspaces.com/user-wtf/1652373309671.jpg',
-        userId: '9123',
-        createAt: '2022-05-10T17:22:10.221Z'
-      },
-      {
-        userName: '希琳',
-        userPhoto: 'https://memeprod.sgp1.digitaloceanspaces.com/user-wtf/1652373309671.jpg',
-        userId: '65423',
-        createAt: '2022-05-10T17:22:10.221Z'
-      }
-    ])
+  name: 'Concerned' ,
+  props: {
+    followers: {
+      type: Array,
+      default: () => []
+    }
+  },
+  setup (props) {
+    const followers = computed( () => {
+      return props.followers
+    })
 
     return {
       followers,
