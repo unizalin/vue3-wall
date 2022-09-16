@@ -12,9 +12,11 @@ export function getPosts({timeSort,keyword},data) {
 }
 
 //取得指定 user 所有貼文
-export function getUserPosts(userId, params) {
+export function getUserPosts({userId,timeSort,keyword }, params) {
+  if(!timeSort)timeSort='desc'
+  if(!keyword)keyword=''
   return request({
-    url: `/posts/getAllPosts/${userId}`,
+    url: `/posts/getAllPosts/${userId}?timeSort=${timeSort}&keyword=${keyword}`,
     method: 'GET',
     params
   })

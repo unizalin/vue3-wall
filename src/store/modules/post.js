@@ -26,8 +26,8 @@ export const actions = {
     const posts = await getPosts(filters)
     commit('PUBLICPOSTS', posts.data)
   }, 
-  async getUserPosts({ commit, state, dispatch },userId){
-    const posts = await getUserPosts(userId)
+  async getUserPosts({ commit, state, dispatch },filters = {}){
+    const posts = await getUserPosts(filters)
     commit('USERPOSTS', posts.data)
   },
   async addPost({ commit, dispatch }, data = {}) {

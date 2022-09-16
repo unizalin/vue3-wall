@@ -54,7 +54,6 @@ export const actions = {
   async register({commit},data){
     try {
       const res = await register(data)
-      console.log(res)
       return res
     } catch (error) {
       return error.response.data
@@ -66,7 +65,6 @@ export const actions = {
       commit('SET_ROLES', [])
       removeLocalStorageToken()
     } catch (error) {
-      console.log(error)
       return error
     }
   },
@@ -77,9 +75,6 @@ export const actions = {
       removeLocalStorageToken()
       resolve()
     })
-  },
-  checkIsLogin({}){
-
   },
   // set default response
   setDefaultResponse ({ commit }) {
@@ -100,6 +95,7 @@ export const actions = {
     try {
       const { data } = await getUserProfile()
       commit('USERPROFILE', data)
+      return data
     } catch (error) {
       return error;
     }

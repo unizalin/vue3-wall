@@ -15,7 +15,7 @@
           <img class="avatar__img" :src="likePost.user.photo"/>
           <div style="margin-left: 16px;">
             <router-link :to="`/personal/${likePost.user._id}`" class="link">{{ likePost.user.name }}</router-link>
-            <p class="avatar__text">發文時間：{{ timeToLocalTime(likePost.createAt) }}</p>
+            <p class="avatar__text">發文時間：{{ timeToLocalTime(likePost.createdAt) }}</p>
           </div>
         </div>
         <ul class="love-post__btn-list">
@@ -53,7 +53,6 @@ export default defineComponent({
     const likePosts = computed(()=> props.likePosts)
     const router = useRouter()
     const gotoPersonalPage = (userId,postId) =>{
-      console.log(userId,postId)
       router.push({
         path: `/personal/${userId}`,
         query: { postId }

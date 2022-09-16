@@ -28,7 +28,7 @@
   </div>
 </template>
 <script>
-  import { defineComponent, onMounted, computed } from 'vue';
+  import { defineComponent, computed } from 'vue';
   import { useStore } from 'vuex';
   
   export default defineComponent({

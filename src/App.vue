@@ -31,14 +31,6 @@ export default defineComponent({
     };
     provide('reload', reload);
   
-    // onBeforeMonut(() => {
-    //   console.log('sss')
-    //   // const isLogin = await store.getters['user/isLogin'];
-    //   // if(isLogin){
-    //   //   router.push({ path: '/login' });
-    //   // }
-    // });
-
     return {
       isRouterAlive,
     };

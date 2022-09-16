@@ -36,16 +36,13 @@ export default defineComponent({
     });
     
     const checkTrackStatus = () => {
-      console.log("checkTrackStatus")
       isTrack.value = otherUserProfile.value.followers.some((item)=>{
         return item.user === userProfile.value._id
       })
-      console.log(isTrack.value)
       trackText.value = isTrack.value ? '取消追蹤' : '追蹤';
     }
 
     const updateFollow = async ()=>{
-      console.log(userId.value)
       if(isTrack.value){
         await store.dispatch('user/delFolower',userId.value)
       }else{
@@ -54,15 +51,12 @@ export default defineComponent({
       await store.dispatch('user/getOtherUser',{ id: userId.value});     
       await checkTrackStatus()
     }
-    
 
     onMounted( async()=>{
       await store.dispatch('user/getOtherUser',{ id: userId.value});
       checkTrackStatus()
     })
-    onUpdated(async()=>{
-      console.log('onUpdated')
-    } )
+
     return {
       thousandSeparator,
       userProfile,

@@ -5,7 +5,12 @@
         <Track />
       </div>
     </transition>
-    <Searchbar />
+    <Searchbar 
+      v-if="!isPostId"
+      :sort="sortby"
+      @sort="sort"
+      @search="search"
+    ></Searchbar>    
     <Posts  :posts="postsList" />
   </div>
 </template>
@@ -29,20 +34,24 @@ export default defineComponent({
     const route = useRoute()
     const paramsId = route.params?.id;
     const postsList = ref([]);
+    const sortby = ref('desc')
     const selfId = computed(() => {
       return store.getters['user/userProfile']?._id
     });
-    const isSelf = ref(selfId == paramsId);
-
+    const isSelf = ref('');
+    const isPostId =ref('')
     onMounted(async () => {
       const { postId } = route.query;
       if(postId){
-          const postData =await store.dispatch('post/getOnePost', {postId} );
-          postsList.value.push(postData.data);
+        const postData =await store.dispatch('post/getOnePost', {postId} );
+        postsList.value.push(postData.data);
+        isPostId.value = true
       }else{
-        await store.dispatch('post/getUserPosts', paramsId );
+        await store.dispatch('post/getUserPosts',  {userId:paramsId} );
         postsList.value.push(...storePost.value);
+        isPostId.value = false
       }
+      isSelf.value = paramsId==selfId.value
     });
 
 
@@ -51,11 +60,27 @@ export default defineComponent({
       return data;
     });    
 
+    const sort = async (sortType) => {
+      postsList.value.length = 0;
+      sortby.value = sortType
+      await store.dispatch('post/getUserPosts',{userId:paramsId,timeSort:sortType})
+      postsList.value.push(...storePost.value);
+    };
+
+    const search = async (serach) => {
+      postsList.value.length = 0;
+      await store.dispatch('post/getUserPosts',{userId:paramsId,timeSort:serach.sortType,keyword:serach.keyword})
+      postsList.value.push(...storePost.value);
+
+    };
+
     onBeforeRouteUpdate(async(to, from) => {
+      postsList.value.length = 0;
+      isPostId.value = false
       const newId = to.params.id;
       isSelf.value = selfId.value == newId;
       await store.dispatch('post/initUserPosts');
-      await store.dispatch('post/getUserPosts', newId );
+      await store.dispatch('post/getUserPosts', {userId:newId} );
       postsList.value.push(...storePost.value);
     });
 
@@ -65,9 +90,13 @@ export default defineComponent({
     return {
       isSelf,
       selfId,
+      isPostId,
       paramsId,
       storePost,
-      postsList
+      postsList,
+      sortby,
+      sort,
+      search
     }
   }
 })

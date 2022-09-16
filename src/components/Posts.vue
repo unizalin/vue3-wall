@@ -19,7 +19,7 @@
           <div style="margin-left: 16px;">
             <router-link :to="`/personal/${post.user._id}`" class="link">{{ post.user.name }}</router-link>
             <p class="avatar__text">
-              {{ timeToLocalTime(post.datetime_pub) }}
+              {{ timeToLocalTime(post.createdAt) }}
             </p>
           </div>
         </div>
@@ -67,7 +67,7 @@
               <img v-else class="avatar__img" src="@/assets/user5-3.png"/>
               <div style="margin-left: 16px">
                 <router-link :to="`/personal/${comment.user._id}`" class="link">{{ comment.user.name }}</router-link>
-                <p class="avatar__text">{{ timeToLocalTime(comment.createdAt) }}</p>
+                <p class="avatar__text">{{ timeToLocalTime(comment.user.createdAt) }}</p>
               </div>
             </div>
             <div class="message__content">{{ comment.comment }}</div>
