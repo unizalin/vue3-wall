@@ -4,7 +4,7 @@ import { getLocalStorageToken } from "@/utils/auth";
 
 // create an axios instance
 const service = axios.create({
-  baseURL: 'https://mysterious-bayou-95411.herokuapp.com/',
+  baseURL: 'https://node-jwtbackend-demo-production.up.railway.app/',
   // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000, // request timeout
