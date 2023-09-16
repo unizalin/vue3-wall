@@ -1,4 +1,4 @@
 module.exports = {
   lintOnSave: false,
-  publicPath: './'
+  publicPath: '/vue3-wall/'
 }
