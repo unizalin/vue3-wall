@@ -25,8 +25,7 @@ export const passwordRule = (password) => {
   return /^((?=\S*?[A-Za-z])(?=\S*?[0-9]).{7,})\S$/.test(password)
 }
 
-export const confirmPasswordRule = (password,confirmPassword) => {
-  console.log(password==confirmPassword)
+export const confirmPasswordRule = (password, confirmPassword) => {
   return password == confirmPassword
 }
 

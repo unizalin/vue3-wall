@@ -18,9 +18,12 @@ export default defineComponent({
     LovePost
   },
   setup () {
-    const store = useStore ()
-    const storeLikeList = computed(()=> store.getters['user/likeList'])
-    onMounted( async () => {
+    const store = useStore()
+    const storeLikeList = computed(() => {
+      const data = store.getters['user/likeList']
+      return data
+    })
+    onMounted(async () => {
       await store.dispatch('user/getLikeList')
     })
 

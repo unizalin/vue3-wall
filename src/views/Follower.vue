@@ -18,8 +18,8 @@ export default defineComponent({
   },
   setup () {
     const store = useStore()
-    const storeFollowing = computed( () => store.getters['user/followingList'])
-    onMounted(async() => {
+    const storeFollowing = computed(() => store.getters['user/followingList'])
+    onMounted(async () => {
       store.dispatch('user/getFollowing')
     })
     return {

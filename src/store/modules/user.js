@@ -12,7 +12,7 @@ import {
   getFollowing,
   addFollow,
   delFollow
-} from "@/api/user"
+} from '@/api/user'
 
 export const state = {
   token: getLocalStorageToken(),
@@ -20,7 +20,7 @@ export const state = {
   id: getLocalStoragePID(),
   avatar: '',
   roles: [],
-  usertInfo : {},
+  usertInfo: {},
   otherUserProfile: {},
   likelist: [],
   followerList: [],
@@ -51,7 +51,7 @@ export const actions = {
       return error
     }
   },
-  async register({commit},data){
+  async register ({ commit }, data) {
     try {
       const res = await register(data)
       return res
@@ -80,75 +80,78 @@ export const actions = {
   setDefaultResponse ({ commit }) {
     commit('SET_DEFAULT_RESPONSE', { status: '' })
   },
-  async updatePassword({commit},data){
+  async updatePassword ({ commit }, data) {
     try {
       const res = await updatePassword({
         password: data.password,
-        confirmPassword: data.confirmPassword,
-      });
+        confirmPassword: data.confirmPassword
+      })
       return res
     } catch (error) {
       return error
     }
   },
-  async getUserProfile({ commit }){
+  async getUserProfile ({ commit }) {
     try {
       const { data } = await getUserProfile()
       commit('USERPROFILE', data)
       return data
     } catch (error) {
-      return error;
+      return error
     }
   },
-  async getStoreUserProfile({ commit }){
+  async getStoreUserProfile ({ commit }) {
     try {
       const { data } = await getUserProfile()
-      commit('STOREUSERPROFILE',data)
+      commit('STOREUSERPROFILE', data)
     } catch (error) {
-      return error;
+      return error
     }
   },
-  async updateUserProfile({commit},userProfile){
+  async updateUserProfile ({ commit }, userProfile) {
     const resData = await updateProfile(userProfile)
     return resData
   },
-  async getOtherUser({ commit, state, dispatch }, userId) {
+  async getOtherUser ({ commit, state, dispatch }, userId) {
     try {
-      const { data } = await getProfile(userId.id);
+      const { data } = await getProfile(userId.id)
       commit('OTHERUSERPROFILE', {
         name: data.name,
+        photo: data.photo,
+        sex: data.sex,
         followers: data.followers,
         following: data.following,
-        followersNum: data.followers.length})
+        followersNum: data.followers.length
+      })
     } catch (error) {
-      return error;
+      return error
     }
   },
-  async getLikeList({ commit, state }) {
+  async getLikeList ({ commit, state }) {
     try {
       const { data } = await getLikeList()
-      commit("LIKELIST", data)
+      commit('LIKELIST', data)
     } catch (error) {
       return error
     }
   },
-  async getFollowers({commit,state}){
+  async getFollowers ({ commit, state }) {
     try {
       const { data } = await getFollowers()
-      commit("FOLLOWERLIST", data[0].followers)
+      commit('FOLLOWERLIST', data[0].followers)
     } catch (error) {
       return error
     }
   },
-  async getFollowing({commit,state}){
+  async getFollowing ({ commit, state }) {
     try {
       const { data } = await getFollowing()
-      commit("FOLLOWINGLIST", data.following)
+      commit('FOLLOWINGLIST', data.following)
     } catch (error) {
       return error
     }
   },
-  async addFolower({commit},userId){
+  async addFolower ({ commit }, userId) {
     try {
       const result = await addFollow(userId)
       return result
@@ -156,7 +159,7 @@ export const actions = {
       return error
     }
   },
-  async delFolower({commit},userId){
+  async delFolower ({ commit }, userId) {
     try {
       const result = await delFollow(userId)
       return result
@@ -191,27 +194,27 @@ export const mutations = {
   USERPROFILE: (state, userProfile) => {
     state.userProfile = userProfile
   },
-  STOREUSERPROFILE: (state, storeUserProfile) =>{
+  STOREUSERPROFILE: (state, storeUserProfile) => {
     state.storeUserProfile = storeUserProfile
   },
   OTHERUSERPROFILE: (state, otherUserProfile) => {
     state.otherUserProfile = otherUserProfile
   },
-  LIKELIST : (state, likelist) => {
+  LIKELIST: (state, likelist) => {
     state.likelist = likelist
   },
   FOLLOWERLIST: (state, followerList) => {
     state.followerList = followerList
   },
-  FOLLOWINGLIST: (state, followingList) =>{
+  FOLLOWINGLIST: (state, followingList) => {
     state.followingList = followingList
   }
 }
 
 export const getters = {
-  isLogin: (state) => state.token !== "" && state.token !== null,
+  isLogin: (state) => state.token !== '' && state.token !== null,
   userInfo: (state) => {
-    const { userName, id, avatar, roles } = state;
+    const { userName, id, avatar, roles } = state
     return {
       userName,
       id,
@@ -226,7 +229,7 @@ export const getters = {
   userProfile: (state) => {
     return state.userProfile
   },
-  storeUserProfile: (state) =>{
+  storeUserProfile: (state) => {
     return state.storeUserProfile
   },
   otherUserProfile: (state) => {
@@ -238,7 +241,7 @@ export const getters = {
   followerList: (state) => {
     return state.followerList
   },
-  followingList: (state) =>{
+  followingList: (state) => {
     return state.followingList
   }
 }

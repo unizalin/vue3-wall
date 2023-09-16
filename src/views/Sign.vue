@@ -60,6 +60,7 @@ import { defineComponent, ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { nicknameRule, emailRule, passwordRule, confirmPasswordRule } from '@/utils/validation'
+import { alertSuccess, alertError } from '@/utils/swal'
 
 export default defineComponent({
   name: 'PublishPost',
@@ -70,7 +71,7 @@ export default defineComponent({
     const isVerifiedNickname = ref(true)
     const isVerifiedEmail = ref(true)
     const isVerifiedPassword = ref(true)
-    const isVerifiedConfirmPassword =ref(true)
+    const isVerifiedConfirmPassword = ref(true)
     const isEmailRegistered = ref(false)
 
     // const accountStatus = computed(() => {
@@ -99,20 +100,21 @@ export default defineComponent({
         ? (isVerifiedPassword.value = false)
         : (isVerifiedPassword.value = true)
 
-      registerForm.confirmPassword.length>0 && confirmPasswordRule(registerForm.password,registerForm.confirmPassword)? (isVerifiedConfirmPassword.value = true)
+      registerForm.confirmPassword.length > 0 && confirmPasswordRule(registerForm.password, registerForm.confirmPassword) ? (isVerifiedConfirmPassword.value = true)
         : (isVerifiedConfirmPassword.value = false)
 
-      if(isVerifiedNickname.value && isVerifiedEmail.value && isVerifiedPassword.value && isVerifiedConfirmPassword.value){
-        const resData =await store.dispatch('user/register', { ...registerForm })
-        console.log(resData)
-        if(resData.status == 'false'){
-          alert('信箱已註冊，請更換')
-          isEmailRegistered.value= true
-          return 
+      if (isVerifiedNickname.value && isVerifiedEmail.value && isVerifiedPassword.value && isVerifiedConfirmPassword.value) {
+        const resData = await store.dispatch('user/register', { ...registerForm })
+        if (resData.status == 'false') {
+          alertError('信箱已註冊，請更換')
+          isEmailRegistered.value = true
+          return
         }
-        router.push({ path: '/login' });
+        alertSuccess('註冊成功！')
+        router.push({ path: '/login' })
       }
     }
+
     return {
       registerForm,
       isVerifiedNickname,

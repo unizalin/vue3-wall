@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-//登入
+// 登入
 export function login (data) {
   return request({
     url: '/users/signIn',
@@ -9,7 +9,7 @@ export function login (data) {
   })
 }
 
-//登出
+// 登出
 export function logout () {
   return request({
     url: '/logout',
@@ -17,7 +17,7 @@ export function logout () {
   })
 }
 
-//註冊
+// 註冊
 export function register (data) {
   return request({
     url: '/users/signUp',
@@ -26,7 +26,7 @@ export function register (data) {
   })
 }
 
-//修改密碼
+// 修改密碼
 export function updatePassword (data) {
   return request({
     url: '/users/updatePassword',
@@ -35,15 +35,15 @@ export function updatePassword (data) {
   })
 }
 
-//取得使用者資料
+// 取得使用者資料
 export function getUserProfile () {
   return request({
-    url: `/users/profile/`,
+    url: '/users/profile/',
     method: 'get'
   })
 }
 
-//取得單一使用者資料
+// 取得單一使用者資料
 export function getProfile (id) {
   return request({
     url: `/users/getUserInfo/${id}`,
@@ -51,16 +51,16 @@ export function getProfile (id) {
   })
 }
 
-//更新使用者資料
-export function updateProfile(data) {
+// 更新使用者資料
+export function updateProfile (data) {
   return request({
-    url: `/users/updateProfile`,
+    url: '/users/updateProfile',
     method: 'patch',
     data
   })
 }
 
-//取得按贊列表
+// 取得按贊列表
 export function getLikeList (data) {
   return request({
     url: '/users/getLikeList',
@@ -69,7 +69,7 @@ export function getLikeList (data) {
   })
 }
 
-//取的追蹤
+// 取的追蹤
 export function getFollowers (data) {
   return request({
     url: '/users/allFollowers',
@@ -78,8 +78,8 @@ export function getFollowers (data) {
   })
 }
 
-//取的追蹤列表
-export function getFollowing(data) {
+// 取的追蹤列表
+export function getFollowing (data) {
   return request({
     url: '/users/getFollowing',
     method: 'get',
@@ -87,18 +87,18 @@ export function getFollowing(data) {
   })
 }
 
-//追蹤一位使用者
+// 追蹤一位使用者
 export function addFollow (id) {
   return request({
     url: `/users/${id}/follow`,
-    method: 'post',
+    method: 'post'
   })
 }
 
-//取消追蹤一位使用者
+// 取消追蹤一位使用者
 export function delFollow (id) {
   return request({
     url: `/users/${id}/unfollow`,
-    method: 'delete',
+    method: 'delete'
   })
 }

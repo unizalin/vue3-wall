@@ -23,34 +23,34 @@
   </div>
 </template>
 <script>
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref, computed } from 'vue'
 
 export default defineComponent({
   name: 'Searchbar',
-  props:{
+  props: {
     sort: {
       type: String,
-      default: 'desc',
+      default: 'desc'
     }
   },
-  setup(props,  { emit }){
-    const keyword = ref('');
+  setup (props, { emit }) {
+    const keyword = ref('')
     const sortText = computed(() => {
-      return props.sort === 'desc' ? '最新貼文' : '最舊貼文';
-    });
+      return props.sort === 'desc' ? '最新貼文' : '最舊貼文'
+    })
 
     const onSort = (sortType) => {
-      emit('sort', sortType);
-    };
+      emit('sort', sortType)
+    }
 
     const onSearch = () => {
-      emit('search',{timeSort:props.sort,keyword: keyword.value});
-    };
-    return{
+      emit('search', { timeSort: props.sort, keyword: keyword.value })
+    }
+    return {
       keyword,
       sortText,
       onSort,
-      onSearch,
+      onSearch
     }
   }
 })

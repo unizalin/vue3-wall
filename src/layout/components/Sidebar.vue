@@ -6,7 +6,11 @@
         <li>
           <router-link :to="`/personal/${userProfile._id}`" class="icon-btn">
             <div class="avatar">
-              <img class="header__avatar__img" :src="userProfile.photo" alt="avatar">           
+              <img v-if="userProfile.photo" class="header__avatar__img" :src="userProfile.photo" alt="avatar">
+              <div v-else>
+                <img v-if="userProfile.sex == 'female'"  class="header__avatar__img" src="@/assets/user5-1.png" alt="">
+                <img v-else  class="header__avatar__img" src="@/assets/user_default.png" alt="">
+              </div>
             </div>
             <p class="icon-btn__text">{{userProfile.name}}</p>
           </router-link>
@@ -28,25 +32,25 @@
   </div>
 </template>
 <script>
-  import { defineComponent, computed } from 'vue';
-  import { useStore } from 'vuex';
-  
-  export default defineComponent({
-    name: 'Sidebar',
-    components: {},
-    setup() {
-      const store = useStore();
+import { defineComponent, computed } from 'vue'
+import { useStore } from 'vuex'
 
-      const userProfile = computed(() => {
-        return store.getters['user/userProfile'];
-      });
-  
-      return { 
-        userProfile
-      
-      };
-    },
-  });
+export default defineComponent({
+  name: 'Sidebar',
+  components: {},
+  setup () {
+    const store = useStore()
+
+    const userProfile = computed(() => {
+      return store.getters['user/userProfile']
+    })
+
+    return {
+      userProfile
+
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -56,5 +60,7 @@
   .header__avatar__img{
     width: 50px;
     height: 50px;
+    border-radius: 100%;
+    border: 2px solid #000400;
   }
 </style>

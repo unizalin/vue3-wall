@@ -39,10 +39,13 @@
       @include flex_align;
 
       .header__avatar__img {
-        padding-right: 10px;
+        width: 30px;
+        margin-right: 10px;
         object-fit: contain;
         min-width: 30px;
         height: 30px;
+        border-radius: 100%;
+        border: 2px solid #000400;
       }
     }
 

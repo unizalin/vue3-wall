@@ -8,19 +8,18 @@
       </div>
       <div class="love-post-empty__content">目前尚無按讚的貼文，快去按讚別人貼文吧！</div>
     </div>
-
     <div v-else v-for="(likePost, index) in likePosts" :key="index">
       <div class="love-post" style="margin-top: 16px">
         <div class="avatar">
           <img class="avatar__img" :src="likePost.user.photo"/>
           <div style="margin-left: 16px;">
-            <router-link :to="`/personal/${likePost.user._id}`" class="link">{{ likePost.user.name }}</router-link>
+            <router-link :to="`/personal/${likePost.user._id}`" class="link text-left">{{ likePost.user.name }}</router-link>
             <p class="avatar__text">發文時間：{{ timeToLocalTime(likePost.createdAt) }}</p>
           </div>
         </div>
         <ul class="love-post__btn-list">
           <li>
-            <button class="love-post__btn" @click="cancelLikePost(likePost.userId, likePost.postId)">
+            <button class="love-post__btn" @click="cancelLikePost(likePost._id, index)">
               <i class="material-icons-outlined love-post__btn__icon blue">thumb_up</i>
               <p class="love-post__btn__text fw-bold">取消</p>
             </button>
@@ -38,8 +37,9 @@
 </template>
 <script>
 import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex'
 import { timeToLocalTime, timeDiffNowTime } from '@/utils/time'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'LovePost',
@@ -50,18 +50,26 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const likePosts = computed(()=> props.likePosts)
+    const likePosts = computed(() => props.likePosts)
     const router = useRouter()
-    const gotoPersonalPage = (userId,postId) =>{
+    const store = useStore()
+    const gotoPersonalPage = (userId, postId) => {
       router.push({
         path: `/personal/${userId}`,
         query: { postId }
-      });
+      })
+    }
+    const cancelLikePost = async (postId, index) => {
+      const result = await store.dispatch('post/delLikes', postId)
+      if (result.status === 'success') {
+        likePosts.value.splice(index, 1)
+      }
     }
     return {
       likePosts,
       timeToLocalTime,
       timeDiffNowTime,
+      cancelLikePost,
       gotoPersonalPage
     }
   }

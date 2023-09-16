@@ -15,9 +15,12 @@
         <!-- 貼文擁有者資料 -->
         <div class="avatar">
           <img v-if="post.user?.photo" class="avatar__img" :src="post.user.photo" />
-          <img v-else class="avatar__img" src="@/assets/user5-1.png" />
+          <div  v-else>
+            <img v-if="post.user.sex == 'female'"  class="header__avatar__img" src="@/assets/user5-1.png" alt="">
+            <img v-else  class="header__avatar__img" src="@/assets/user_default.png" alt="">
+          </div>
           <div style="margin-left: 16px;">
-            <router-link :to="`/personal/${post.user._id}`" class="link">{{ post.user.name }}</router-link>
+            <router-link :to="`/personal/${post.user._id}`" class="link text-left">{{ post.user.name }}</router-link>
             <p class="avatar__text">
               {{ timeToLocalTime(post.createdAt) }}
             </p>
@@ -50,7 +53,10 @@
           <div class="avatar">
             <!-- 本人圖片 -->
             <img v-if="userProfile.photo" class="avatar__img" :src="userProfile.photo" />
-            <img v-else class="avatar__img" src="@/assets/user5-1.png" />
+            <div v-else>
+              <img v-if="userProfile.sex == 'female'"  class="avatar__img" src="@/assets/user5-1.png" alt="">
+            <img v-else  class="avatar__img" src="@/assets/user_default.png" alt="">
+            </div>
           </div>
           <div class="message-bar__content" style="margin-left: 8px">
             <div class="message-bar__content__input">
@@ -63,10 +69,10 @@
         <div  v-for="(comment, commentIndex) in post.comments" :key="commentIndex">
           <div class="message" style="margin-top: 16px;">
             <div class="avatar">
-              <img v-if="comment.user.photo !== ''" class="avatar__img" :src="comment.user.photo"/>
-              <img v-else class="avatar__img" src="@/assets/user5-3.png"/>
+              <img v-if="comment.user.photo" class="avatar__img" :src="comment.user.photo"/>
+              <img v-else class="avatar__img 12" src="@/assets/user_default.png" alt="">
               <div style="margin-left: 16px">
-                <router-link :to="`/personal/${comment.user._id}`" class="link">{{ comment.user.name }}</router-link>
+                <router-link :to="`/personal/${comment.user._id}`" class="link text-left">{{ comment.user.name }}</router-link>
                 <p class="avatar__text">{{ timeToLocalTime(comment.user.createdAt) }}</p>
               </div>
             </div>
@@ -79,8 +85,8 @@
 </template>
 <script>
 import { defineComponent, ref, computed } from 'vue'
-import { timeToLocalTime } from '@/utils/time';
-import { useStore } from 'vuex';
+import { timeToLocalTime } from '@/utils/time'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Posts',
@@ -91,36 +97,34 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const store = useStore();
+    const store = useStore()
     const posts = computed(() => {
       return props.posts
     })
     const comment = ref([])
     const userProfile = computed(() => {
-      return store.getters['user/userProfile'];
-    });
+      return store.getters['user/userProfile']
+    })
 
-    const updateLike = async(postId,index)=>{
+    const updateLike = async (postId, index) => {
       const likeIndex = posts.value[index].likes.indexOf(userProfile.value._id)
-      if(likeIndex == -1){
-        posts.value[index].likes.push(userProfile.value._id);
-        await store.dispatch('post/updateLikes',postId)
+      if (likeIndex == -1) {
+        posts.value[index].likes.push(userProfile.value._id)
+        await store.dispatch('post/updateLikes', postId)
       } else {
-        posts.value[index].likes.splice(likeIndex, 1);
-        await store.dispatch('post/delLikes',postId)
+        posts.value[index].likes.splice(likeIndex, 1)
+        await store.dispatch('post/delLikes', postId)
       }
     }
 
-    const addComment = async(postId,index)=>{
-      console.log(postId,index)
+    const addComment = async (postId, index) => {
       const commentData = comment.value[index]
-      const result = await store.dispatch('post/addComment', { postId,  commentData});
-      if(result.status === 'success'){
-        comment.value[index] = '';
-        posts.value[index].comments.push(result.data.comments);
-      } 
+      const result = await store.dispatch('post/addComment', { postId, commentData })
+      if (result.status === 'success') {
+        comment.value[index] = ''
+        posts.value[index].comments.push(result.data.comments)
+      }
     }
-
 
     return {
       posts,

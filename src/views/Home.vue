@@ -1,6 +1,6 @@
 <template>
   <div class="w-100">
-    <Searchbar 
+    <Searchbar
       :sort="sortby"
       @sort="sort"
       @search="search"
@@ -23,18 +23,18 @@ export default {
   setup () {
     const store = useStore()
     const sortby = ref('desc')
-    onMounted( async() => {
+    onMounted(async () => {
       await store.dispatch('post/publichPosts')
     })
-    const storePost = computed(() => store.getters['post/publicPosts']);
+    const storePost = computed(() => store.getters['post/publicPosts'])
     const sort = async (sortType) => {
       sortby.value = sortType
-      await store.dispatch('post/publichPosts',{timeSort:sortType})
-    };
+      await store.dispatch('post/publichPosts', { timeSort: sortType })
+    }
 
     const search = async (serach) => {
-      await store.dispatch('post/publichPosts',serach)
-    };
+      await store.dispatch('post/publichPosts', serach)
+    }
     return {
       store,
       storePost,

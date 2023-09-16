@@ -34,35 +34,35 @@ import { defineComponent, reactive, ref } from 'vue'
 import { imageTypeRule } from '@/utils/validation'
 import { useStore } from 'vuex'
 import { uploadImage } from '@/api/image.js'
-import router from '../router';
+import router from '../router'
 
 export default defineComponent({
   name: 'PublishPost',
   setup () {
-    const store = useStore();
+    const store = useStore()
     const content = ref('')
     let file = reactive({})
-    let fs = reactive({
+    const fs = reactive({
       name: '', // input 的圖檔名稱
       thumbnail: null, // input 的圖片縮圖
       size: null, // input 的圖片大小
-      unit: 'KB',
+      unit: 'KB'
     })
-    let title = ref('') // 圖片標題
-    let preViewImage = ref(null) // 圖片預覽
-    let errorImageMessageVised = ref(true)
-    let errorImageMessage = ref('')
-    let errorContentMessageVised = ref(true)
-    let errorContentMessage = ref('')   
-    let uploadImageRes;
+    const title = ref('') // 圖片標題
+    const preViewImage = ref(null) // 圖片預覽
+    const errorImageMessageVised = ref(true)
+    const errorImageMessage = ref('')
+    const errorContentMessageVised = ref(true)
+    const errorContentMessage = ref('')
+    let uploadImageRes
     const errorMessageEnum = {
       noContent: '沒有貼文內容，請填寫',
       imageSizeError: '圖片檔案過大，僅限 1mb 以下檔案',
-      imageTypeError: '圖片格式錯誤，僅限 JPG、PNG 圖片',
+      imageTypeError: '圖片格式錯誤，僅限 JPG、PNG 圖片'
     }
-    const showFile = async(e) =>{
+    const showFile = async (e) => {
       file = e.target.files[0]
-      console.log('showFile',file)
+      console.log('showFile', file)
       fs.name = file.name // input 的圖檔名稱
       fs.thumbnail = window.URL.createObjectURL(file) // input 的圖片縮圖
       fs.size = ~~(file.size * 0.001) // input 的圖片大小
@@ -80,35 +80,30 @@ export default defineComponent({
       }
 
       uploadImageRes = await uploadImage(file)
-      console.log('uploadImageRes',uploadImageRes)
+      console.log('uploadImageRes', uploadImageRes)
     }
-    
-    const submitPost = async () =>{
+
+    const submitPost = async () => {
       try {
-        console.log('submitPost')
-        errorContentMessageVised.value = false;
-
+        errorContentMessageVised.value = false
         if (content.value === '') {
-          errorContentMessageVised.value = true;
-          errorContentMessage.value = errorMessageEnum.noContent;
-          return false;
+          errorContentMessageVised.value = true
+          errorContentMessage.value = errorMessageEnum.noContent
+          return false
         }
-
         if (errorImageMessageVised.value) {
-          return false;
+          return false
         }
-        
-        const userId = store.getters['user/userProfile']?._id; 
+        const userId = store.getters['user/userProfile']?._id
+
         const { status, data } = await store.dispatch('post/addPost', {
           userId,
           content: content.value,
           imgUrl: uploadImageRes.data.imageUrl
-        });
-        console.log(status,data)
-        status === 'success' && router.push({ path: '/home' });
-
+        })
+        status === 'success' && router.push({ path: '/home' })
       } catch (error) {
-        
+
       }
     }
     return {
